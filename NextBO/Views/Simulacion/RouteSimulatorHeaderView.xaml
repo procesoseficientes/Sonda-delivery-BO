@@ -1,0 +1,353 @@
+﻿<UserControl x:Class="NextBO.Wpf.Views.RouteSimulatorHeaderView"
+             xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:viewmodel="clr-namespace:NextBO.Wpf.ViewModels"
+             xmlns:local="clr-namespace:NextBO.Wpf"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon"
+             mc:Ignorable="d"
+             UseLayoutRounding="True"
+             d:DesignHeight="463"
+             d:DesignWidth="1183"
+             DataContext="{dxmvvm:ViewModelSource viewmodel:RouteSimulatorViewModel}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/NextBO.Wpf;component/Themes/Common.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:PictureConverter x:Key="PictureConverter" />
+            <dxmvvm:ObjectToObjectConverter x:Key="ShowFilterById">
+                <dxmvvm:MapItem Source="FilterDate"
+                                Target="Collapsed" />
+                <dxmvvm:MapItem Source="FilterId"
+                                Target="Visible" />
+            </dxmvvm:ObjectToObjectConverter>
+            <dxmvvm:ObjectToObjectConverter x:Key="ShowFilterByDate">
+                <dxmvvm:MapItem Source="FilterDate"
+                                Target="Visible" />
+                <dxmvvm:MapItem Source="FilterId"
+                                Target="Collapsed" />
+            </dxmvvm:ObjectToObjectConverter>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService/>
+        <dxmvvm:EventToCommand EventName="Loaded" Command="{Binding OnLoadedCommand}"/>
+    </dxmvvm:Interaction.Behaviors>
+
+    <DockPanel>
+        <dxr:RibbonControl x:Name="ribbonControl" RibbonStyle="Office2019" DockPanel.Dock="Top" ShowApplicationButton="False">
+            <dxr:RibbonPage Caption="Home">
+                <dxr:RibbonPageGroup Caption="Opciones">
+                    <dxb:BarButtonItem Content="Guardar y Cerrar" Command="{Binding SaveAndCloseEntityCommand }"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/saveandclosemap.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/saveandclosemap.svg'}" />
+                    <dxb:BarButtonItem Content="Guardar y Nuevo " Command="{Binding SaveAndNewEntityCommand }"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/saveandnewmap.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/saveandnewmap.svg'}" />
+                    <dxb:BarButtonItem Content="Cerrar" Command="{Binding CloseCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Close.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Close.svg'}" />
+                </dxr:RibbonPageGroup>
+                <dxr:RibbonPageGroup Caption="Simulacion">
+                    <dxb:BarButtonItem Content="Simular ruta" Command="{Binding SimulateRouteCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Modules/Simulador.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Modules/Simulador.svg'}" />
+                </dxr:RibbonPageGroup>
+                <dxr:RibbonPageGroup Caption="Filtrar Manifiestos">
+                    <dxb:BarButtonItem Content="Filtrar por fechas" 
+                                       Command="{Binding ViewSettings.ShowFilterDateCommand}"
+                                       Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/SaveAndClose.svg'}"
+                                       LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/SaveAndClose.svg'}" />
+                    <dxb:BarButtonItem Content="Filtrar por Id" 
+                                       Command="{Binding ViewSettings.ShowFilterIdCommand}"
+                                       Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}"
+                                       LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}" />
+                </dxr:RibbonPageGroup>
+                <dxr:RibbonPageGroup>
+                    <dxb:BarButtonItem Content="Restablecer Cambios" Command="{Binding ResetChangesCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/ResetChanges.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/ResetChanges.svg'}" />
+                </dxr:RibbonPageGroup>
+            </dxr:RibbonPage>
+        </dxr:RibbonControl>
+
+        <dxlc:LayoutControl Orientation="Vertical">
+            <dxlc:LayoutGroup Orientation="Horizontal" Margin="5,5,5,5" View="GroupBox" 
+                              Header="Filtrar Manifiestos por Rango de Fecha" IsCollapsible="True" 
+                              Visibility="{Binding ViewSettings.ViewKind, Converter={StaticResource ShowFilterByDate}}">
+                <dxlc:LayoutItem Label="Fecha Inicio" Margin="10,0,0,0" Width="250" AddColonToLabel="True">
+                    <dxe:DateEdit CausesValidation="False" IsTextEditable="False" EditValue="{Binding StartDate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Fecha Fin" Margin="10,0,0,0" Width="250" AddColonToLabel="True">
+                    <dxe:DateEdit CausesValidation="False" IsTextEditable="False" EditValue="{Binding EndDate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem Label="Manifiestos" Margin="10,0,0,0" Width="350" AddColonToLabel="True">
+                    <dxg:LookUpEdit AutoPopulateColumns="False"
+                                    IncrementalFiltering="True"
+                                    IsPopupAutoWidth="False"
+                                    IsTextEditable="False"
+                                    EditValue="{Binding SelectedManifests[0].manifestId, 
+                                        UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                    IsPopupOpen="{Binding ProjectLookUp.IsActivated,
+                                         Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                                    Tag="{Binding ProjectLookUp}"
+                                    IsEnabled="{Binding IsProjectEditable}"
+                                    AllowUpdateTwoWayBoundPropertiesOnSynchronization="True"
+                                    PopupFooterButtons="OkCancel">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand EventName="CustomDisplayText" 
+                                                   Command="{Binding ConvertTextDisplayCommand}"
+                                                   PassEventArgsToCommand="True"/>
+                        </dxmvvm:Interaction.Behaviors>
+                        <dxg:LookUpEdit.Buttons>
+                            <dxe:ButtonInfo GlyphKind="Cancel">
+                                <dxmvvm:Interaction.Behaviors>
+                                    <dxmvvm:EventToCommand EventName="Click"
+                                                           Command="{Binding CleanManifestsSelectedCommand}"/>
+                                </dxmvvm:Interaction.Behaviors>
+                            </dxe:ButtonInfo>
+                        </dxg:LookUpEdit.Buttons>
+                        <dxg:LookUpEdit.PopupContentTemplate>
+                            <ControlTemplate>
+                                <dxg:GridControl x:Name="PART_GridControl"
+                                                 SelectionMode="MultipleRow"       
+                                                 ItemsSource="{Binding ManifestsByDateRanges}"       
+                                                 SelectedItems="{Binding SelectedManifests}">
+                                    <dxg:GridControl.Columns>
+                                        <dxg:GridColumn FieldName="manifestId"
+                                                            Header="Manifiesto"/>
+                                        <dxg:GridColumn FieldName="createDate"
+                                                            Header="Fecha de Creacion"/>
+                                        <dxg:GridColumn FieldName="qtyStops"
+                                                            Header="Cantidad de Paradas"/>
+                                        <dxg:GridColumn FieldName="externalManifestId"
+                                                            Header="External"/>
+                                    </dxg:GridControl.Columns>
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView ShowCheckBoxSelectorColumn="True"
+                                                       RetainSelectionOnClickOutsideCheckBoxSelector="False"
+                                                       ImmediateUpdateRowPosition="True">
+                                        </dxg:TableView>
+                                    </dxg:GridControl.View>
+                                </dxg:GridControl>
+                            </ControlTemplate>
+                        </dxg:LookUpEdit.PopupContentTemplate>
+                        <dxg:LookUpEdit.PopupBottomAreaTemplate>
+                            <ControlTemplate>
+                                <StackPanel Margin="5"
+                                            HorizontalAlignment="Center"
+                                            Orientation="Horizontal">
+                                    <Button Margin="2"
+                                            Command="{Binding Path=(dxe:PopupBaseEdit.PopupOwnerEdit).ClosePopupCommand,
+                                                  RelativeSource={RelativeSource TemplatedParent}}"
+                                            CommandParameter="{x:Static dxe:PopupCloseMode.Normal}"
+                                            Content="Aceptar" />
+                                </StackPanel>
+                            </ControlTemplate>
+                        </dxg:LookUpEdit.PopupBottomAreaTemplate>
+                    </dxg:LookUpEdit>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutGroup Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0">
+                    <dx:SimpleButton Height="25" Margin="10,-5,0,5" Content="Filtrar manifiestos" Glyph="{dx:DXImage Image=Filter_16x16.png}" HorizontalAlignment="Left">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand Command="{Binding FilterManifestByDateRangeCommand}"
+                                                   EventName="Click">
+                            </dxmvvm:EventToCommand>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dx:SimpleButton>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+            <dxlc:LayoutGroup Orientation="Horizontal" Margin="5,5,5,5" View="GroupBox" 
+                              Header="Filtrar Manifiestos por Id" IsCollapsible="True" 
+                              Visibility="{Binding ViewSettings.ViewKind, Converter={StaticResource ShowFilterById}}"
+                              Width="Auto">
+                <dxlc:LayoutItem Label="Id de manifiestos" Margin="10,0,0,0" Width="500" AddColonToLabel="True">
+                    <dxe:TextEdit EditValue="{Binding ListManifest, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}"/>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutGroup Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0">
+                    <dx:SimpleButton Height="25" Margin="10,-5,0,5" Content="Filtrar manifiestos" Glyph="{dx:DXImage Image=Filter_16x16.png}" HorizontalAlignment="Left">
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand Command="{Binding FilterManifestByDateRangeCommand}"
+                                                   EventName="Click">
+                            </dxmvvm:EventToCommand>
+                        </dxmvvm:Interaction.Behaviors>
+                    </dx:SimpleButton>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+
+                <dxlc:LayoutGroup Visibility="Collapsed" Orientation="Horizontal" Margin="5,5,5,5" View="GroupBox" Header="Filtrar Manifiestos por Rango de Fecha" IsCollapsible="True" Width="Auto">
+                <dxlc:LayoutItem Label="Vehiculo" Margin="10,0,0,0" Width="450" AddColonToLabel="True">
+                    <dxg:LookUpEdit DisplayMember="PlateNumber"
+                                    ValueMember="Id"
+                                    AutoPopulateColumns="False"
+                                    AutoComplete="True"
+                                    ItemsSource="{Binding LookUpVehicle}"
+                                    EditValue="{Binding Path=VehicleId, Mode=TwoWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"
+                                    ValidateOnTextInput="True"
+                                    IncrementalFiltering="True"
+                                    ImmediatePopup="True"
+                                    IsPopupAutoWidth="False"
+                                    VerticalAlignment="Top"                              
+                                    AssignNullValueOnClearingEditText="False"
+                                    IsTextEditable="False"
+                                    NullValueButtonPlacement="None"
+                                    PopupFooterButtons="OkCancel"
+                                    IsPopupOpen="{Binding ProjectLookUp.IsActivated,
+                                         Mode=OneWayToSource}"
+                                    Tag="{Binding ProjectLookUp}"
+                                    IsEnabled="{Binding IsProjectEditable}"
+                                    AllowUpdateTwoWayBoundPropertiesOnSynchronization="False">
+                        <dxg:LookUpEdit.Buttons>
+                            <dxe:ButtonInfo GlyphKind="Cancel">
+                                <dxmvvm:Interaction.Behaviors>
+                                    <dxmvvm:EventToCommand EventName="Click"
+                                                           Command="{Binding CleanVehicleSelectedCommand}"/>
+                                </dxmvvm:Interaction.Behaviors>
+                            </dxe:ButtonInfo>
+                        </dxg:LookUpEdit.Buttons>
+                        <dxg:LookUpEdit.PopupContentTemplate>
+                            <ControlTemplate>
+                                <dxg:GridControl x:Name="PART_GridControl">
+                                    <dxg:GridControl.Columns>
+                                        <dxg:GridColumn FieldName="PlateNumber" 
+                                                        Header="Numero de placa"/>
+                                        <dxg:GridColumn FieldName="Brand"
+                                                        Header="Marca"/>
+                                        <dxg:GridColumn FieldName="Color"/>
+                                    </dxg:GridControl.Columns>
+                                    <dxg:GridControl.View>
+                                        <dxg:TableView AutoWidth="True"/>
+                                    </dxg:GridControl.View>
+                                </dxg:GridControl>
+                            </ControlTemplate>
+                        </dxg:LookUpEdit.PopupContentTemplate>
+                        <dxg:LookUpEdit.PopupBottomAreaTemplate>
+                            <ControlTemplate>
+                                <StackPanel Margin="5"
+                                            HorizontalAlignment="Center"
+                                            Orientation="Horizontal">
+                                    <Button Margin="2"
+                                            Command="{Binding Path=(dxe:PopupBaseEdit.PopupOwnerEdit).ClosePopupCommand,
+                                                  RelativeSource={RelativeSource TemplatedParent}}"
+                                            CommandParameter="{x:Static dxe:PopupCloseMode.Normal}"
+                                            Content="Aceptar" />
+                                </StackPanel>
+                            </ControlTemplate>
+                        </dxg:LookUpEdit.PopupBottomAreaTemplate>
+                    </dxg:LookUpEdit>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutGroup Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,4,0,0">
+                    <dx:SimpleButton Command="{Binding SimulateRouteCommand}" Height="25" Margin="10,-5,0,5" 
+                                     Content="Simular Ruta" Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Modules/Simulador.svg'}" 
+                                     HorizontalAlignment="Left"
+                                    >
+                    </dx:SimpleButton>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup Orientation="Vertical">
+                <Grid>
+                    <dxg:GridControl ItemsSource="{Binding RouteSimulators}"
+                                     SelectedItem="{Binding RouteSimulator}"
+                                     
+                                     >
+                        <dxg:GridControl.View>
+                            <dxg:TableView Name="SimulatorDetailTableView"
+                                           ShowSearchPanelFindButton="True" 
+                                           ShowSearchPanelMode="Always"
+                                           AutoWidth="True" 
+                                           SearchPanelHorizontalAlignment="Right"
+                                           SearchPanelNullText="Buscar Manifiesto (Ctrl + F)" 
+                                           ColumnFilterPopupMode="Excel"
+                                           AllowEditing="False"
+                                           ShowTotalSummary="True">
+                            </dxg:TableView>
+                        </dxg:GridControl.View>
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn FieldName="Vehicle.PlateNumber" 
+                                            Header="Vehículo"
+                                            Visible="True"
+                                            GroupIndex="0"/>
+                            <dxg:GridColumn FieldName="ManifestId"
+                                            Header="Manifiesto"/>
+                            <dxg:GridColumn FieldName="Order" 
+                                            Header="Pedido"/>
+                            <dxg:GridColumn FieldName="OrderPrice"
+                                            Header="Precio del Pedido" EditSettings="{dxe:TextSettings DisplayFormat=n6}">
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="TotalWeight"
+                                            Header="Peso Total" EditSettings="{dxe:TextSettings DisplayFormat=n6}">
+                            </dxg:GridColumn>
+                            <dxg:GridColumn FieldName="TotalVolume" EditSettings="{dxe:TextSettings DisplayFormat=n6}"
+                                            Header="Volumen Total"/>
+                            <dxg:GridColumn FieldName="DistanceToTravel" EditSettings="{dxe:TextSettings DisplayFormat=n6}"
+                                            Header="Distancia a Recorrer(Km)"/>
+                            <dxg:GridColumn FieldName="DistanceCost" EditSettings="{dxe:TextSettings DisplayFormat=n6}"
+                                            Header="Costo por Km del vehículo"/>
+                            <dxg:GridColumn FieldName="DeliveryCost" EditSettings="{dxe:TextSettings DisplayFormat=n6}"
+                                            Header="Costo de la Entrega"/>
+                            <dxg:GridColumn FieldName="OrderCost" EditSettings="{dxe:TextSettings DisplayFormat=n6}"
+                                            Header="Costo del Pedido"/>
+                            <dxg:GridColumn FieldName="TotalDistributionCost" EditSettings="{dxe:TextSettings DisplayFormat=n6}"
+                                            Header="Costo de Distribución"/>
+                            <dxg:GridColumn FieldName="MarginOfGain" EditSettings="{dxe:TextSettings DisplayFormat=n6}"
+                                            Header="Margen de Ganancia"/>
+                            <dxg:GridColumn FieldName="PercentageMarginOnTheSalePrice" EditSettings="{dxe:TextSettings DisplayFormat=n6}"
+                                            Header="Margen de Ganacia en %"/>
+                            <dxg:GridColumn FieldName="Address" 
+                                            Header="Dirección"
+                                            Visible="False"/>
+                            <dxg:GridColumn FieldName="Latitude" 
+                                            Header="Latitud"
+                                            Visible="False"
+                                            AllowEditing="True"/>
+                            <dxg:GridColumn FieldName="Longitude" 
+                                            Header="Longitud"
+                                            Visible="False"
+                                            AllowEditing="True"/>
+                            <dxg:GridColumn FieldName="ClientCode" 
+                                            Header="Código de Cliente"
+                                            Visible="False"/>
+                            <dxg:GridColumn FieldName="ClientName" 
+                                            Header="Nombre de Cliente"
+                                            Visible="False"/>
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.TotalSummary>
+                            <dxg:GridSummaryItem FieldName="OrderPrice" SummaryType="Sum" DisplayFormat="Total: {0:n6}" ShowInColumn="OrderPrice" />
+                            <dxg:GridSummaryItem FieldName="TotalWeight" SummaryType="Sum" DisplayFormat="Total: {0:n6}" ShowInColumn="TotalWeight" />
+                            <dxg:GridSummaryItem FieldName="TotalVolume" SummaryType="Sum" DisplayFormat="Total: {0:n6}" ShowInColumn="TotalVolume" />
+                            <dxg:GridSummaryItem FieldName="DistanceToTravel" SummaryType="Sum" DisplayFormat="Total: {0:n6}" ShowInColumn="DistanceToTravel" />
+                            <dxg:GridSummaryItem FieldName="DeliveryCost" SummaryType="Sum" DisplayFormat="Total: {0:n6}" ShowInColumn="DeliveryCost" />
+                            <dxg:GridSummaryItem FieldName="OrderCost" SummaryType="Sum" DisplayFormat="Total: {0:n6}" ShowInColumn="OrderCost" />
+                            <dxg:GridSummaryItem FieldName="TotalDistributionCost" SummaryType="Sum" DisplayFormat="Total: {0:n6}" ShowInColumn="TotalDistributionCost" />
+                            <dxg:GridSummaryItem FieldName="MarginOfGain" SummaryType="Sum" DisplayFormat="Total: {0:n6}" ShowInColumn="MarginOfGain" />
+                            <dxg:GridSummaryItem FieldName="PercentageMarginOnTheSalePrice" SummaryType="Average" DisplayFormat="Total: {0:n6}" ShowInColumn="PercentageMarginOnTheSalePrice" />
+                        </dxg:GridControl.TotalSummary>
+                    </dxg:GridControl>
+                    <dx:WaitIndicator IsEnabled="{Binding IsLoading, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}" 
+                                      DeferedVisibility="{Binding IsLoading, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True}" 
+                                      Content="Calculando simulación de rutas" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <dx:WaitIndicator.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="Porfavor espere" FontSize="20"/>
+                                    <TextBlock Text="{Binding}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </dx:WaitIndicator.ContentTemplate>
+                    </dx:WaitIndicator>
+                </Grid>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+    </DockPanel>
+</UserControl>
+

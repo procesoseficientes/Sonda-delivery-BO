@@ -1,0 +1,230 @@
+﻿<UserControl x:Class="NextBO.Wpf.Views.ReDeliveryView"
+             xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon"
+             xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:local="clr-namespace:NextBO.Wpf"
+             xmlns:services="clr-namespace:NextBO.Wpf.Services"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             mc:Ignorable="d"
+             UseLayoutRounding="True"
+             d:DesignHeight="663" d:DesignWidth="1183">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/NextBO.Wpf;component/Themes/Common.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:PictureConverter x:Key="PictureConverter" />
+            <dxmvvm:ObjectToObjectConverter x:Key="PaymentConverter">
+                <dxmvvm:MapItem Source="CANCELLED" Target="{dx:SvgImageSource Size='16,16', Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Orders/PaymentUnpaid.svg'}"/>
+                <dxmvvm:MapItem Source="DELIVERED" Target="{dx:SvgImageSource Size='16,16', Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Orders/PaymentPaid.svg'}"/>
+                <dxmvvm:MapItem Source="PENDING" Target="{dx:SvgImageSource Size='16,16', Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Orders/PaymentRefund.svg'}"/>
+                <dxmvvm:MapItem Source="Other" Target="{x:Null}"/>
+            </dxmvvm:ObjectToObjectConverter>
+            <dxmvvm:ObjectToObjectConverter x:Key="ShipmentConverter">
+                <dxmvvm:MapItem Source="PENDING" Target="{dx:SvgImageSource Size='16,16', Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Orders/ShipmentAwaiting.svg'}"/>
+                <dxmvvm:MapItem Source="CANCELLED" Target="{dx:SvgImageSource Size='16,16', Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Orders/ShipmentTransit.svg'}"/>
+                <dxmvvm:MapItem Source="DELIVERED" Target="{dx:SvgImageSource Size='16,16', Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Orders/ShipmentReceived.svg'}"/>
+            </dxmvvm:ObjectToObjectConverter>
+            <dxmvvm:ObjectToObjectConverter x:Key="TextConvert" >
+                <dxmvvm:MapItem Source="DELIVERED" Target="ENTREGADO"/>
+                <dxmvvm:MapItem Source="CANCELLED" Target="CANCELADO"/>
+                <dxmvvm:MapItem Source="PENDING" Target="PENDIENTE"/>
+            </dxmvvm:ObjectToObjectConverter>
+            <dxmvvm:ObjectToObjectConverter x:Key="PaidTooltipConverter" DefaultTarget="Paid">
+                <dxmvvm:MapItem Source="0" Target="Mark as Paid"/>
+            </dxmvvm:ObjectToObjectConverter>
+            <dxmvvm:ObjectToObjectConverter x:Key="PaymentStatusConverter" DefaultTarget="Other">
+                <dxmvvm:MapItem Source="Unpaid" Target="Unpaid"/>
+                <dxmvvm:MapItem Source="PaidInFull" Target="Paid In Full"/>
+                <dxmvvm:MapItem Source="RefundInFull" Target="Refund In Full"/>
+            </dxmvvm:ObjectToObjectConverter>
+            <dxmvvm:ObjectToObjectConverter x:Key="RefundTooltipConverter" DefaultTarget="Refund Issued">
+                <dxmvvm:MapItem Source="0" Target="Issue Full Refund"/>
+            </dxmvvm:ObjectToObjectConverter>
+            <dxmvvm:ObjectToObjectConverter x:Key="ListViewToFalseConverter" DefaultTarget="True">
+                <dxmvvm:MapItem Source="ListView" Target="False"/>
+            </dxmvvm:ObjectToObjectConverter>
+            <DataTemplate x:Key="DetailViewTemplate">
+                <dxg:GridControl ItemsSource="{Binding Tasks}" ShowBorder="True" MaxHeight="5000">
+                    <dxg:GridControl.View>
+                        <dxg:TableView 
+                               AllowEditing="False"
+                               ShowGroupPanel="False">
+                            <dxg:TableView.FormatConditions>
+                            </dxg:TableView.FormatConditions>
+                        </dxg:TableView>
+                    </dxg:GridControl.View>
+                    <dxg:GridControl.Columns>
+                        <dxg:GridColumn IsSmart="True" FieldName="Status" HeaderToolTip="Estado de Entrega" CellToolTipBinding="{Binding Path=Status, Converter={StaticResource PaymentStatusConverter}}"  Width="40" FixedWidth="True" HorizontalHeaderContentAlignment="Center">
+                            <dxg:GridColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <dx:DXImage Source="{dx:SvgImageSource Size='16,16', Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Orders/Payment.svg'}" Stretch="None"/>
+                                </DataTemplate>
+                            </dxg:GridColumn.HeaderTemplate>
+                            <dxg:GridColumn.CellTemplate>
+                                <DataTemplate>
+                                    <dx:DXImage Source="{Binding Path=Value, Converter={StaticResource PaymentConverter}}" Stretch="None"/>
+                                </DataTemplate>
+                            </dxg:GridColumn.CellTemplate>
+                        </dxg:GridColumn>
+                        <dxg:GridColumn IsSmart="True" FieldName="Id">
+                            <dxg:GridColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Tarea" FontWeight="Bold"/>
+                                </DataTemplate>
+                            </dxg:GridColumn.HeaderTemplate>
+                        </dxg:GridColumn>
+                        <dxg:GridColumn IsSmart="True" FieldName="CreatedDate" Header="Fecha de Creacion" />
+                        <dxg:GridColumn IsSmart="True" FieldName="DriverName" Header="Piloto"/>
+                        <dxg:GridColumn IsSmart="True" FieldName="VehicleDescription" Header="Modelo del Vehiculo" />
+                        <dxg:GridColumn IsSmart="True" FieldName="NoReasonDelivery" Header="Razon de no Entrega" />
+                        <dxg:GridColumn IsSmart="True" FieldName="Status"
+                                         Binding="{Binding Path=Status, Converter={StaticResource TextConvert}}">
+                            <dxg:GridColumn.EditSettings>
+                                <dxe:TextEditSettings />
+                            </dxg:GridColumn.EditSettings>
+                        </dxg:GridColumn>
+                        <dxg:GridColumn IsSmart="True" FieldName="QtyTotal" Header="Items entregados" />
+                    </dxg:GridControl.Columns>
+                </dxg:GridControl>
+            </DataTemplate>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <services:ExportGridService  View="{x:Reference ReDeliveryTableView}" />
+        <dx:DXMessageBoxService />
+        <dxmvvm:SaveFileDialogService />
+    </dxmvvm:Interaction.Behaviors>
+
+    <DockPanel>
+        <dxr:RibbonControl x:Name="ribbonControl" RibbonStyle="Office2019" DockPanel.Dock="Top" ShowApplicationButton="False">
+            <dxr:RibbonDefaultPageCategory Caption="defaultCategory">
+                <dxr:RibbonPage Caption="Home">
+                    <dxr:RibbonPageGroup Caption="Exportar">
+                        <dxb:BarButtonItem Content="Generar Reporte" 
+                                           Command="{Binding PrintReprocessCommand}"
+                                           CommandParameter="{Binding SelectedEntity }"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Report.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Report.svg'}"/>
+                        <dxb:BarButtonItem Content="Previsualizar"
+                                           Command="{Binding ShowPreviewCommand}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/PrintPreview.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/PrintPreview.svg'}" />
+                        <dxb:BarButtonItem Content="Exportar"
+                                           Command="{Binding ExportGridCommand}"
+                                           CommandParameter="XLSX"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Controls/ExportToXLS.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Controls/ExportToXLS.svg'}" />
+                        <dxb:BarButtonItem Content="Exportar"
+                                           Command="{Binding ExportGridCommand}"
+                                           CommandParameter="PDF"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Controls/ExportToPDF.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Controls/ExportToXLS.svg'}" />
+                    </dxr:RibbonPageGroup>
+                </dxr:RibbonPage>
+            </dxr:RibbonDefaultPageCategory>
+        </dxr:RibbonControl>
+
+        <dxdo:DockLayoutManager>
+            <dxdo:LayoutGroup Orientation="{Binding ViewSettings.Orientation}">
+                <dxdo:LayoutPanel HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Disabled" AllowSizing="True" ItemWidth="*" ItemHeight="*" AllowClose="False" AllowDrag="False" AllowFloat="False" AllowHide="False" ShowCaption="False">
+                    <dxlc:LayoutControl Orientation="Vertical">
+                        <dxlc:LayoutGroup >
+                            <dxlc:LayoutItem Label="Fecha inicio" Margin="10,10,0,0" AddColonToLabel="True" HorizontalAlignment="Left">
+                                <dxe:DateEdit Height="25" EditValue="{Binding Path=StartDate, Mode=TwoWay}" ShowClearButton="False"/>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Fecha fin" Margin="10,10,0,0" AddColonToLabel="True" HorizontalAlignment="Left">
+                                <dxe:DateEdit Height="25" EditValue="{Binding Path=EndDate, Mode=TwoWay}" ShowClearButton="False"/>
+                            </dxlc:LayoutItem>
+                            <dx:SimpleButton Height="25" Margin="10,10,0,5" Content="Filtrar" Glyph="{dx:DXImage Image=Filter_16x16.png}" HorizontalAlignment="Left">
+                                <dxmvvm:Interaction.Behaviors>
+                                    <dxmvvm:EventToCommand PassEventArgsToCommand="True"
+                                                           Command="{Binding RefreshPageCommand}"
+                                                           EventName="Click">
+                                        <dxmvvm:EventToCommand.EventArgsConverter>
+                                            <dx:EventArgsToDataRowConverter />
+                                        </dxmvvm:EventToCommand.EventArgsConverter>
+                                    </dxmvvm:EventToCommand>
+                                </dxmvvm:Interaction.Behaviors>
+                            </dx:SimpleButton>
+                            <dx:SimpleButton Height="25" Margin="10,10,0,5" Content="Cancelar Filtro" HorizontalAlignment="Left">
+                                <dxmvvm:Interaction.Behaviors>
+                                    <dxmvvm:EventToCommand PassEventArgsToCommand="True"
+                                                           Command="{Binding CancelFilterCommand}"
+                                                           EventName="Click">
+                                        <dxmvvm:EventToCommand.EventArgsConverter>
+                                            <dx:EventArgsToDataRowConverter />
+                                        </dxmvvm:EventToCommand.EventArgsConverter>
+                                    </dxmvvm:EventToCommand>
+                                </dxmvvm:Interaction.Behaviors>
+                            </dx:SimpleButton>
+                        </dxlc:LayoutGroup>
+                        <dxlc:LayoutGroup>
+                            <dxg:GridControl x:Name="gridControl"
+                                                 ItemsSource="{Binding Documents}"
+                                                 ShowBorder="True" IsFilterEnabled="False"
+                                                 SelectedItem="{Binding SelectedEntity}"
+                                                 ShowLoadingPanel="{Binding IsLoading}"
+                                                 AutoExpandAllGroups="True" FilterString="{Binding DefaultFilter, Mode=OneWay}">
+                                <dxg:GridControl.View>
+                                    <dxg:TableView Name="ReDeliveryTableView" AllowMasterDetail="{Binding ViewSettings.ViewKind}" AllowEditing="False" 
+                                               SearchPanelHorizontalAlignment="Right" NavigationStyle="Row" AllowConditionalFormattingMenu="True"
+                                               AllowPerPixelScrolling="True" ShowSearchPanelFindButton="True" ShowSearchPanelMode="Always" AutoWidth="True"                                                 
+                                               GroupSummaryDisplayMode="AlignByColumns" HorizontalScrollbarVisibility="Hidden" ShowGroupPanel="False"
+                                               SearchPanelNullText="Buscar Reentrega (Ctrl + F)" ColumnFilterPopupMode="Excel">
+                                        <dxg:TableView.RowCellMenuCustomizations>
+                                            <dxb:BarButtonItem Content="Refresh" Command="{Binding View.DataContext.RefreshCommand}"  Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/ChangeView.svg'}"/>
+                                        </dxg:TableView.RowCellMenuCustomizations>
+                                    </dxg:TableView>
+                                </dxg:GridControl.View>
+                                <dxg:GridControl.Columns>
+                                    <dxg:GridColumn IsSmart="True" FieldName="Task.Status" HeaderToolTip="Estado de Entrega" CellToolTipBinding="{Binding Path=Task.Status, Converter={StaticResource ShipmentConverter}}" Width="40" FixedWidth="True" HorizontalHeaderContentAlignment="Center">
+                                        <dxg:GridColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <dx:DXImage Source="{dx:SvgImageSource Size='16,16', Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Orders/Shipment.svg'}" Stretch="None"/>
+                                            </DataTemplate>
+                                        </dxg:GridColumn.HeaderTemplate>
+                                        <dxg:GridColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <dx:DXImage Source="{Binding Path=Value, Converter={StaticResource ShipmentConverter}}" Stretch="None"/>
+                                            </DataTemplate>
+                                        </dxg:GridColumn.CellTemplate>
+                                    </dxg:GridColumn>
+                                    <dxg:GridColumn IsSmart="True" FieldName="CreatedDate" Header="Fecha del documento" SortOrder="Ascending"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="DocNum" Header="Numero de documento"/>
+                                    <dxg:GridColumn FieldName="DocumentDetail.Count" Header="Cantidad entregada"/>
+                                    <dxg:GridColumn FieldName="ClientName" Header="Nombre del cliente"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="AddressCustomer" Header="Direccion"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="Task.DeliveredDate" Header="Fecha de entrega"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="DriverName" Header="Nombre Del Piloto" Visible="False"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="Id" Header="ID Document" Visible="False"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="MaterialId" Header="Id Material" Visible="False"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="MaterialName" Header="Nombre del Material" Visible="False"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="Qty" Header="Cantidad" Visible="False"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="TaskId" Header="Id Task" Visible="False"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="LineNum" Header="NUmero de Linea" Visible="False"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="Status" Header="Estado" Visible="False"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="VehicleDescription" Header="Descripcion del Vehiculo" Visible="False"/>
+                                    <dxg:GridColumn IsSmart="True" FieldName="Reason" Header="Razon De No Entrega" Visible="False"/>
+                                </dxg:GridControl.Columns>
+                                <dxg:GridControl.DetailDescriptor>
+                                    <dxg:ContentDetailDescriptor ContentTemplate="{StaticResource DetailViewTemplate}"/>
+                                </dxg:GridControl.DetailDescriptor>
+                            </dxg:GridControl>
+                        </dxlc:LayoutGroup>
+                    </dxlc:LayoutControl>
+                </dxdo:LayoutPanel>
+            </dxdo:LayoutGroup>
+        </dxdo:DockLayoutManager>
+
+    </DockPanel>
+</UserControl>

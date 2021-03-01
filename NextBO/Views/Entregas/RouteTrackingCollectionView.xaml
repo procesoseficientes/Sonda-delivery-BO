@@ -1,0 +1,95 @@
+﻿<UserControl x:Class="NextBO.Wpf.Views.Entregas.RouteTrackingCollectionView"
+                xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+                xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+                xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+                xmlns:local="clr-namespace:NextBO.Wpf"
+                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                xmlns:services="clr-namespace:NextBO.Wpf.Services"
+                xmlns:devAv ="clr-namespace:NextBO.Wpf.ViewModels"
+                xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+                xmlns:dxm="http://schemas.devexpress.com/winfx/2008/xaml/map"
+                mc:Ignorable="d"
+                UseLayoutRounding="True"
+                d:DesignHeight="663" d:DesignWidth="1183" >
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/NextBO.Wpf;component/Themes/Common.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:PictureConverter x:Key="PictureConverter" />
+            <local:IntToBooleanConverter x:Key="IntToBooleanConverter" />
+            <DataTemplate x:Key="TemplateImageDelivery">
+                <Grid x:Name="Grid_Content" MaxHeight="5000">
+                    <Border HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" 
+                            BorderBrush="Black">
+                        <dxe:ImageEdit Source="{Binding}"  Stretch="Uniform">
+                            <dxe:ImageEdit.MenuTemplate>
+                                <ControlTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <dxe:ImageEditSaveToolButton />
+                                    </StackPanel>
+                                </ControlTemplate>
+                            </dxe:ImageEdit.MenuTemplate>
+                        </dxe:ImageEdit>
+                    </Border>
+                </Grid>
+            </DataTemplate>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel>
+        <dxlc:LayoutControl Orientation="Vertical" TextBlock.FontSize="11"  VerticalAlignment="Stretch" StretchContentVertically="True" x:Name="layoutControl">
+            <dxlc:LayoutGroup Orientation="Horizontal" x:Name="entityGroup" >
+                <dxlc:LayoutGroup Orientation="Horizontal" Margin="0,25,0,25" RenderTransformOrigin="0.518,0.477" >
+                    <dxlc:LayoutGroup >
+                        <dx:DXTabControl >
+                            <dx:DXTabItem Header="Seguimiento Ruta">
+                                <dxm:MapControl EnableScrolling="True" EnableZooming="True" ZoomLevel="12"
+                                                    Height="400" Margin="0" Name="mapControl1" 
+                                                    CenterPoint="{Binding CenterPoint}">
+                                    <dxm:MapControl.CoordinatesPanelOptions>
+                                        <dxm:CoordinatesPanelOptions Visible="False"/>
+                                    </dxm:MapControl.CoordinatesPanelOptions>
+                                    <dxm:MapControl.ScrollButtonsOptions>
+                                        <dxm:ScrollButtonsOptions Visible="False"/>
+                                    </dxm:MapControl.ScrollButtonsOptions>
+                                    <dxm:MapControl.ScalePanelOptions>
+                                        <dxm:ScalePanelOptions HorizontalAlignment="Center" Margin="-10" ShowMilesScale="False" VerticalAlignment="Bottom"/>
+                                    </dxm:MapControl.ScalePanelOptions>
+                                    <dxm:MapControl.ZoomTrackbarOptions>
+                                        <dxm:ZoomTrackbarOptions HorizontalAlignment="Center" Margin="0" Orientation="Horizontal" VerticalAlignment="Bottom"/>
+                                    </dxm:MapControl.ZoomTrackbarOptions>
+                                    <dxm:ImageTilesLayer>
+                                        <dxm:OpenStreetMapDataProvider/>
+                                    </dxm:ImageTilesLayer>
+                                    <dxm:ImageLayer>
+                                        <dxm:BingMapDataProvider Kind="Road" BingKey="{x:Static devAv:MapViewModelBase.WpfBingKey}"/>
+                                    </dxm:ImageLayer>
+                                    <dxm:InformationLayer EnableHighlighting="False">
+                                        <dxm:InformationLayer.DataProvider>
+                                            <dxm:BingRouteDataProvider x:Name="routeProvider" BingKey="{x:Static devAv:MapViewModelBase.WpfBingKey}"
+                                            LayerItemsGenerating="routeProvider_LayerItemsGenerating"/>
+                                        </dxm:InformationLayer.DataProvider>
+                                    </dxm:InformationLayer>
+                                </dxm:MapControl>
+                            </dx:DXTabItem>
+                            <dx:DXTabItem Header="Seguimiento Vehiculo">
+                                <dxlc:LayoutItem x:Name="ContentImageFirm" VerticalAlignment="Stretch" HorizontalAlignment="Center" MaxHeight="5000">
+                                    <!-- Seguimiento vehiculo -->
+                                </dxlc:LayoutItem>
+                            </dx:DXTabItem>
+                            <dx:DXTabItem Header="GeoCerca">
+                                <!-- Geocerca -->
+                            </dx:DXTabItem>
+                        </dx:DXTabControl>
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+        <DataGrid x:Name="listPoints" ItemsSource="{Binding LogLocations}" Visibility="Hidden" Loaded="listPoints_Loaded" />
+    </DockPanel>
+</UserControl>

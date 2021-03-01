@@ -1,0 +1,36 @@
+{
+  "version": 2,
+  "dgSpecHash": "NDBXdBldchFdPiR9apxnsQmj/MKdwGXeGwp1hsP3pOPH/jgy9psnnhcrbomBvnSBoEKiOCiiVB/2hds3IdaopQ==",
+  "success": false,
+  "projectFilePath": "C:\\Users\\Eira Delcompare\\mobilityscm\\NetCoreWPF\\NextBO\\NextBO\\NextBO.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project NextApi.Models is not compatible with netcoreapp3.0 (.NETCoreApp,Version=v3.0). Project NextApi.Models supports: net5.0 (.NETCoreApp,Version=v5.0)",
+      "libraryId": "NextApi.Models",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.0"
+      ]
+    },
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project Next.Utils is not compatible with netcoreapp3.0 (.NETCoreApp,Version=v3.0). Project Next.Utils supports: net5.0 (.NETCoreApp,Version=v5.0)",
+      "libraryId": "Next.Utils",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.0"
+      ]
+    },
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project NextApi.DataAccessLayer is not compatible with netcoreapp3.0 (.NETCoreApp,Version=v3.0). Project NextApi.DataAccessLayer supports: net5.0 (.NETCoreApp,Version=v5.0)",
+      "libraryId": "NextApi.DataAccessLayer",
+      "targetGraphs": [
+        ".NETCoreApp,Version=v3.0"
+      ]
+    }
+  ]
+}

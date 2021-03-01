@@ -1,0 +1,19 @@
+<dx:ThemedWindow
+    x:Class="NextBO.Wpf.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:view="clr-namespace:NextBO.Wpf.Views"
+    Width="1384"
+    Height="810"
+    dx:ScrollBarExtensions.ScrollBarMode="TouchOverlap"
+    Loaded="MainWindowLoaded"
+    ShowIcon="False"
+    Title="Next"
+    UseLayoutRounding="True"
+    WindowStartupLocation="CenterScreen"
+    WindowState="Maximized">
+
+    <view:BaseView />
+
+</dx:ThemedWindow>

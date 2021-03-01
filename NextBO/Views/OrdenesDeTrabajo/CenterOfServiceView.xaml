@@ -1,0 +1,121 @@
+﻿<UserControl x:Class="NextBO.Wpf.Views.CenterOfServiceView"
+             xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:viewmodel="clr-namespace:NextBO.Wpf.ViewModels"
+             xmlns:local="clr-namespace:NextBO.Wpf"
+             mc:Ignorable="d"
+             UseLayoutRounding="True"
+             d:DesignHeight="663"
+             d:DesignWidth="1183"
+             DataContext="{dxmvvm:ViewModelSource viewmodel:CenterOfServiceViewModel}" >
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/NextBO.Wpf;component/Themes/Common.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:PictureConverter x:Key="PictureConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService/>
+    </dxmvvm:Interaction.Behaviors>
+
+    <DockPanel>
+        <dxr:RibbonControl x:Name="ribbonControl" RibbonStyle="Office2019" DockPanel.Dock="Top" ShowApplicationButton="False">
+            <dxr:RibbonPage Caption="Home">
+                <dxr:RibbonPageGroup Caption="Acciones">
+                    <dxb:BarButtonItem Content="Guardar" Command="{Binding SaveCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}" />
+                    <dxb:BarButtonItem Content="Inactivar"
+                                           Command="{Binding DeactiveCommand}"
+                                           CommandParameter="{Binding Entity}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Delete.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Delete.svg'}" />
+                    <dxb:BarButtonItem Content="Activar"
+                                           Command="{Binding ActivateCommand}"
+                                           CommandParameter="{Binding Entity}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Active.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Active.svg'}" />
+                </dxr:RibbonPageGroup>
+                <dxr:RibbonPageGroup Caption="Cerrar">
+                    <dxb:BarButtonItem Content="Guardar y cerrar" Command="{Binding SaveAndCloseCommand }"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/SaveAndClose.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/SaveAndClose.svg'}" />
+                    <dxb:BarButtonItem Content="Cerrar" Command="{Binding CloseCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Close.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Close.svg'}" />
+                </dxr:RibbonPageGroup>
+                <dxr:RibbonPageGroup>
+                    <dxb:BarButtonItem Content="Restablecer cambios" Command="{Binding ResetCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/ResetChanges.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/ResetChanges.svg'}" />
+                </dxr:RibbonPageGroup>
+            </dxr:RibbonPage>
+        </dxr:RibbonControl>
+        <dxr:RibbonStatusBarControl DockPanel.Dock="Bottom"/>
+        <dxlc:LayoutControl Orientation="Vertical" TextBlock.FontSize="11" VerticalAlignment="Stretch" StretchContentVertically="True" x:Name="layoutControl">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand Event="{x:Static Binding.SourceUpdatedEvent}" Command="{Binding UpdateCommand}" />
+            </dxmvvm:Interaction.Behaviors>
+            <dxlc:LayoutGroup Orientation="Horizontal" x:Name="entityGroup">
+                <dxlc:LayoutGroup Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5"/>
+                <dxlc:LayoutGroup Orientation="Vertical" VerticalAlignment="Top" Margin="5">
+                    <dxlc:LayoutGroup Orientation="Horizontal" Margin="0,25,0,25" RenderTransformOrigin="0.518,0.477">
+
+                        <dxlc:LayoutGroup   Orientation="Vertical" Width="auto">
+                            <Label Height="25" FontWeight="Bold" Width="Auto" >Datos Generales Del Cetro De Servicio</Label>
+                            <dxlc:LayoutItem Label="Nombre" Margin="10,0,0,0" AddColonToLabel="True">
+                                <dxe:TextEdit EditValue="{Binding Entity.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Contacto"  Margin="10,0,0,0" AddColonToLabel="True">
+                                <dxe:TextEdit EditValue="{Binding Entity.Contact, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Correo Electronico" Margin="10,0,0,0" AddColonToLabel="True">
+                                <dxe:TextEdit MaskType="RegEx"
+                                              Mask="(\w|[\.\-])+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}"                                            
+                                              ValidateOnTextInput="True"
+                                              EditValue="{Binding Entity.Email, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                            </dxlc:LayoutItem>
+
+                            <dxlc:LayoutItem Label="Direccion"  Margin="10,0,0,0" AddColonToLabel="True">
+                                <dxe:TextEdit EditValue="{Binding Entity.Address, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Correo Electronico Del Contacto"  Margin="10,0,0,0" AddColonToLabel="True">
+                                <dxe:TextEdit MaskType="RegEx"
+                                              Mask="(\w|[\.\-])+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,4}"                                            
+                                              ValidateOnTextInput="True"
+                                              EditValue="{Binding Entity.ContactEmail, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem  Margin="10,0,0,0"  Label="Numero de Telefono" AddColonToLabel="True" IsRequired="True">
+                                <dxe:ButtonEdit IsTextEditable="True"
+                                            AllowDefaultButton="False"
+                                            MaskType="Simple"
+                                            Mask="0000-0000"
+                                            MaskUseAsDisplayFormat="True"
+                                            EditValue="{Binding Entity.PhoneNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" Width="auto">
+                                    <dxe:ButtonInfo GlyphKind="Custom" Command="{Binding Contacts.HomeCallCommand}">
+                                        <dx:DXImage Source="{dx:SvgImageSource Size='16,16', Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Buttons/Glyph_Phone.svg'}" Margin="3,0"/>
+                                    </dxe:ButtonInfo>
+                                </dxe:ButtonEdit>
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Sitio Web"  Margin="10,0,0,0" AddColonToLabel="True">
+                                <dxe:TextEdit EditValue="{Binding Entity.Website, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                            </dxlc:LayoutItem>
+
+                        </dxlc:LayoutGroup>
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,60 @@
+﻿<UserControl
+    x:Class="NextBO.Wpf.Views.CheckpointByRoleView"
+    xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="clr-namespace:NextBO.Wpf.ViewModels"
+    mc:Ignorable="d"
+    d:DesignHeight="654"
+    d:DesignWidth="1147"
+    DataContext="{dxmvvm:ViewModelSource viewmodel:CheckpointViewModel}">
+
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService x:Name="messageBoxService" />
+    </dxmvvm:Interaction.Behaviors>
+
+    <DockPanel>
+        <dxg:TreeListControl ItemsSource="{Binding CheckPointAssignedToRole}">
+            <dxg:TreeListControl.Columns>
+                <dxg:TreeListColumn
+                    FieldName="Group"
+                    Header="Grupo"
+                    ReadOnly="True" />
+                <dxg:TreeListColumn
+                    FieldName="DisplayName"
+                    Header="Nombre"
+                    ReadOnly="True" />
+                <dxg:TreeListColumn
+                    FieldName="Type"
+                    Header="Tipo De Aplicación"
+                    ReadOnly="True" />
+            </dxg:TreeListControl.Columns>
+            <dxg:TreeListControl.View>
+                <dxg:TreeListView
+                    AllowRecursiveNodeChecking="True"
+                    AutoExpandAllNodes ="True"
+                    AutoWidth="True"
+                    CheckBoxFieldName="Selected"
+                    ChildNodesPath="Children"
+                    KeyFieldName="Id"
+                    Name="treeList"
+                    ParentFieldName="ParentId"
+                    ShowCheckboxes="true"
+                    ShowTotalSummary="True" >
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand
+                                Command="{Binding IsSelectedCommand}"
+                                EventName="NodeCheckStateChanged"
+                                UseDispatcher="True"
+                                PassEventArgsToCommand="True"/>
+                    </dxmvvm:Interaction.Behaviors>
+                </dxg:TreeListView>
+            </dxg:TreeListControl.View>
+        </dxg:TreeListControl>
+    </DockPanel>
+
+</UserControl>

@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="NextBO.Wpf.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:viewmodel="clr-namespace:NextBO.Wpf.ViewModels"
+             xmlns:local="clr-namespace:NextBO.Wpf"
+             mc:Ignorable="d"
+             DataContext="{dxmvvm:ViewModelSource viewmodel:DashboardViewModel}"
+             d:DesignHeight="450"
+             d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="LayoutItemStyle"
+               TargetType="dxlc:LayoutItem">
+            <Setter Property="AddColonToLabel"
+                    Value="True" />
+        </Style>
+        <DataTemplate x:Key="MainGroupHeaderTemplate">
+            <dxlc:LayoutControl Padding="2"
+                                ScrollBars="None"
+                                Background="Transparent">
+                <dxlc:LayoutControl.Resources></dxlc:LayoutControl.Resources>
+                <TextBlock Text="Next BackOffice"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center" />
+                <TextBlock Text="{Binding DataContext.LoggedUser.RoleName, ElementName=LayoutRoot}"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold" />
+            </dxlc:LayoutControl>
+        </DataTemplate>
+    </UserControl.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService />
+        <local:UserSessionService />
+    </dxmvvm:Interaction.Behaviors>
+    <dxlc:LayoutControl x:Name="LayoutRoot"
+                        Orientation="Vertical"
+                        StretchContentVertically="False"
+                        Background="Transparent"
+                        ItemStyle="{StaticResource LayoutItemStyle}">
+        <dxlc:LayoutGroup HeaderTemplate="{StaticResource MainGroupHeaderTemplate}"
+                          View="GroupBox"
+                          ItemSpace="10"
+                          dxlc:LayoutControl.AllowVerticalSizing="True"
+                          DataContext="{Binding LoggedUser}"
+                          Orientation="Vertical">
+            
+            <Grid>
+                <TextBlock Text="¡Bienvenido!"
+                           FontSize="80"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Top" />
+            </Grid>
+            <Grid >
+                <TextBlock Text="{Binding Name}"
+                           FontSize="50"
+                           Margin="50,-15,0,0"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Top" />
+            </Grid>
+
+        </dxlc:LayoutGroup>
+    </dxlc:LayoutControl>
+</UserControl>

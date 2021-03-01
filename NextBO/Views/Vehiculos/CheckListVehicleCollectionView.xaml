@@ -1,0 +1,171 @@
+﻿<UserControl x:Class="NextBO.Wpf.Views.CheckListVehicleCollectionView"
+             xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:viewmodel="clr-namespace:NextBO.Wpf.ViewModels"
+             mc:Ignorable="d"
+             UseLayoutRounding="True"
+             d:DesignHeight="663"
+             d:DesignWidth="1183"
+             DataContext="{dxmvvm:ViewModelSource viewmodel:CheckListVehicleCollectionViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/NextBO.Wpf;component/Themes/Common.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <viewmodel:SelectedItemsConverter x:Key="SelectedItemsConverter" />
+            <dxmvvm:ObjectToObjectConverter x:Key="boolToVisibilityConverter">
+                <dxmvvm:MapItem Source="SEMANAL" Target="Visible"/>
+                <dxmvvm:MapItem Source="DIARIO" Target="Hidden"/>
+                <dxmvvm:MapItem Source="NINGUNO" Target="Hidden"/>
+            </dxmvvm:ObjectToObjectConverter>
+        </ResourceDictionary>
+        
+    </UserControl.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService />
+    </dxmvvm:Interaction.Behaviors>
+    <DockPanel>
+        <dxr:RibbonControl x:Name="ribbonControl"
+                           RibbonStyle="Office2019"
+                           DockPanel.Dock="Top"
+                           ShowApplicationButton="False">
+            <dxr:RibbonDefaultPageCategory Caption="defaultCategory">
+                <dxr:RibbonPage Caption="Opciones">
+                    <dxr:RibbonPageGroup Caption="Acciones">
+                        <dxb:BarButtonItem Content="Guardar"
+                                           Command="{Binding UpdateConfigCheckListCommand}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}" />
+                        <dxb:BarButtonItem Command="{Binding CloseCommand}"
+                                           Content="Cerrar"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Close.svg'}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Close.svg'}" />
+                    </dxr:RibbonPageGroup>
+                </dxr:RibbonPage>
+            </dxr:RibbonDefaultPageCategory>
+        </dxr:RibbonControl>
+        <dxr:RibbonStatusBarControl DockPanel.Dock="Bottom" />
+        <dxlc:LayoutControl Orientation="Horizontal"
+                            TextBlock.FontSize="11"
+                            StretchContentVertically="True"
+                            x:Name="layoutControl"
+                            Height="477">
+            <dxlc:LayoutGroup Orientation="Vertical"
+                              VerticalAlignment="Stretch"
+                              HorizontalAlignment="Stretch">
+                <dxlc:LayoutItem>
+                    <Label>Inicio de ruta</Label>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem>
+                    <dxlc:LayoutGroup Orientation="Vertical">
+                        
+                        <dxlc:LayoutItem Label="Periodicidad"
+                                         Margin="10,10,0,0"
+                                         AddColonToLabel="True">
+                            <dxe:ComboBoxEdit PopupFooterButtons="OkCancel"
+                                              ShowSizeGrip="True"
+                                              EditValue="{Binding Entities[0].Periodicity, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"
+                                              IsTextEditable="False">
+                                <dxe:ComboBoxEdit.StyleSettings>
+                                    <dxe:RadioComboBoxStyleSettings />
+                                </dxe:ComboBoxEdit.StyleSettings>
+                                <dxe:ComboBoxEditItem Content="NINGUNO" />
+                                <dxe:ComboBoxEditItem Content="DIARIO"  />
+                                <dxe:ComboBoxEditItem Content="SEMANAL" />
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Dias"
+                                         Margin="10,10,0,0"
+                                         AddColonToLabel="True"
+                                         Visibility="{Binding Entities[0].Periodicity ,Converter={StaticResource boolToVisibilityConverter}, Mode=TwoWay}">
+                            <dxe:ComboBoxEdit x:Name="cbSimpleToken"
+                                              Margin="16,12,16,16"
+                                              VerticalAlignment="Top"
+                                              EditValue="{Binding Path=SelectedDaysStart, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource SelectedItemsConverter }}"
+                                              AutoComplete="{Binding Path=IsChecked, ElementName=cbAutoComplete}"
+                                              IncrementalFiltering="{Binding Path=IsChecked, ElementName=cbFiltering}"
+                                              HorizontalScrollBarVisibility="{Binding Path=EditValue, ElementName=cbHorizontalScrollBarVisibility}"
+                                              ImmediatePopup="False"
+                                              IsTextEditable="False">
+                                <dxe:ComboBoxEdit.StyleSettings>
+                                    <dxe:TokenComboBoxStyleSettings NewTokenPosition="Far" />
+                                </dxe:ComboBoxEdit.StyleSettings>
+                                <dxe:ComboBoxEdit.Items>
+                                    <dxe:ComboBoxEditItem>Lunes</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Martes</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Miércoles</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Jueves</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Viernes</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Sábado</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Domingo</dxe:ComboBoxEditItem>
+                                </dxe:ComboBoxEdit.Items>
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutItem>
+                
+                <dxlc:LayoutItem>
+                    <Label>Fin de ruta</Label>
+                </dxlc:LayoutItem>
+                <dxlc:LayoutItem>
+                    <dxlc:LayoutGroup Orientation="Vertical">
+                        
+                        <dxlc:LayoutItem Label="Periodicidad"
+                                         Margin="10,10,0,0"
+                                         AddColonToLabel="True">
+                            <dxe:ComboBoxEdit PopupFooterButtons="OkCancel"
+                                              ShowSizeGrip="True"
+                                              EditValue="{Binding Entities[1].Periodicity, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"
+                                              IsTextEditable="False">
+                                <dxe:ComboBoxEdit.StyleSettings>
+                                    <dxe:RadioComboBoxStyleSettings />
+                                </dxe:ComboBoxEdit.StyleSettings>
+                                <dxe:ComboBoxEditItem Content="NINGUNO" />
+                                <dxe:ComboBoxEditItem Content="DIARIO" />
+                                <dxe:ComboBoxEditItem Content="SEMANAL" />
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                        <dxlc:LayoutItem Label="Dias"
+                                         Margin="10,10,0,0"
+                                         AddColonToLabel="True" 
+                                         Visibility="{Binding Entities[1].Periodicity ,Converter={StaticResource boolToVisibilityConverter}, Mode=TwoWay}">
+                            <dxe:ComboBoxEdit x:Name="cbSimpleToken2"
+                                          Margin="16,12,16,16"
+                                          VerticalAlignment="Top"
+                                          EditValue="{Binding Path=SelectedDaysEnd, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, Converter={StaticResource SelectedItemsConverter }}"
+                                          AutoComplete="{Binding Path=IsChecked, ElementName=cbAutoComplete}"
+                                          IncrementalFiltering="{Binding Path=IsChecked, ElementName=cbFiltering}"
+                                          HorizontalScrollBarVisibility="{Binding Path=EditValue, ElementName=cbHorizontalScrollBarVisibility}"
+                                          ImmediatePopup="False"
+                                              IsTextEditable="False">
+                                <dxe:ComboBoxEdit.StyleSettings>
+                                    <dxe:TokenComboBoxStyleSettings NewTokenPosition="Far" />
+                                </dxe:ComboBoxEdit.StyleSettings>
+                                <dxe:ComboBoxEdit.Items>
+                                    <dxe:ComboBoxEditItem>Lunes</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Martes</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Miércoles</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Jueves</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Viernes</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Sábado</dxe:ComboBoxEditItem>
+                                    <dxe:ComboBoxEditItem>Domingo</dxe:ComboBoxEditItem>
+                                </dxe:ComboBoxEdit.Items>
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutItem>
+            </dxlc:LayoutGroup>
+        </dxlc:LayoutControl>
+    </DockPanel>
+</UserControl>

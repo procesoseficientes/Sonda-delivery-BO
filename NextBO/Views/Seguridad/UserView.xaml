@@ -1,0 +1,189 @@
+﻿<UserControl x:Class="NextBO.Wpf.Views.UserView"
+    xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+    xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+    xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon"
+    xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:viewmodel="clr-namespace:NextBO.Wpf.ViewModels"    
+    xmlns:local="clr-namespace:NextBO.Wpf"
+    mc:Ignorable="d"
+    UseLayoutRounding="True"
+    d:DesignHeight="663" d:DesignWidth="1183"
+    DataContext="{dxmvvm:ViewModelSource viewmodel:UserViewModel}">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/NextBO.Wpf;component/Themes/Common.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:PictureConverter x:Key="PictureConverter" />
+            <dxmvvm:ObjectToObjectConverter x:Key="ShowPilotInformationConverter" >
+                <dxmvvm:MapItem Source="false" Target="Collapsed"/>
+                <dxmvvm:MapItem Source="true" Target="Visible"/>
+            </dxmvvm:ObjectToObjectConverter>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService/>
+    </dxmvvm:Interaction.Behaviors>
+    <DockPanel>
+        <dxr:RibbonControl x:Name="ribbonControl" RibbonStyle="Office2019" DockPanel.Dock="Top" ShowApplicationButton="False">
+            <dxr:RibbonPage Caption="Home">
+                <dxr:RibbonPageGroup Caption="Opciones">
+                    <dxb:BarButtonItem Content="Agregar piloto" Command="{Binding AddPilotCommand }"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/NewEmploye.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/NewEmploye.svg'}" />
+                    <dxb:BarButtonItem Content="Guardar" Command="{Binding SaveCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}" />
+                    <dxb:BarButtonItem Content="Guardar y Cerrar" Command="{Binding SaveAndCloseCommand }"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/SaveAndClose.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/SaveAndClose.svg'}" />
+                </dxr:RibbonPageGroup>
+                <dxr:RibbonPageGroup Caption="Cerrar">
+                    <dxb:BarButtonItem Content="Cerrar" Command="{Binding CloseCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Close.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Close.svg'}" />
+                </dxr:RibbonPageGroup>
+                <dxr:RibbonPageGroup>
+                    <dxb:BarButtonItem Content="Restablecer Cambios" Command="{Binding ResetCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/ResetChanges.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/ResetChanges.svg'}" />
+                </dxr:RibbonPageGroup>
+                <dxr:RibbonPageGroup>
+                    <dxb:BarButtonItem Content="Activar" Command="{Binding ActivateCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Active.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Active.svg'}" />
+                    <dxb:BarButtonItem Content="Desactivar" Command="{Binding DeleteCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Delete.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Delete.svg'}" />
+                </dxr:RibbonPageGroup>
+                <dxr:RibbonPageGroup Caption="Exportar">
+                    <dxb:BarButtonItem Content="Generar Reporte" Command="{Binding PrintProfileUserCommand}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Report.svg'}" Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Report.svg'}"/>
+                </dxr:RibbonPageGroup>
+            </dxr:RibbonPage>
+        </dxr:RibbonControl>
+        <dxr:RibbonStatusBarControl DockPanel.Dock="Bottom"/>
+        <dxlc:LayoutControl Orientation="Vertical" TextBlock.FontSize="11" VerticalAlignment="Stretch" StretchContentVertically="True" x:Name="layoutControl">
+            <dxmvvm:Interaction.Behaviors>
+                <dxmvvm:EventToCommand Event="{x:Static Binding.SourceUpdatedEvent}" Command="{Binding UpdateCommand}" />
+            </dxmvvm:Interaction.Behaviors>
+            <dxlc:LayoutGroup View="GroupBox" Header="Datos Generales" Orientation="Vertical">
+                <dxlc:LayoutGroup Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5"/>
+                <dxlc:LayoutGroup Orientation="Vertical" VerticalAlignment="Top" Margin="5">
+                    <dxlc:LayoutGroup Orientation="Horizontal" Margin="0,15,0,25" RenderTransformOrigin="0.518,0.477">
+
+                        <dxlc:LayoutGroup   Orientation="Vertical" Width="auto">
+                            <dxlc:LayoutItem Label="Nombre Completo" Margin="10,0,0,0" AddColonToLabel="True">
+                                <dxe:TextEdit EditValue="{Binding Entity.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Label="Usuario"  Margin="10,0,0,0" AddColonToLabel="True">
+                                <dxe:TextEdit EditValue="{Binding Entity.UserLogin, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                            </dxlc:LayoutItem>
+                            <dxlc:LayoutItem Margin="10,0,0,0" Label="Rol" AddColonToLabel="True" >
+
+                                <dxe:ComboBoxEdit IsTextEditable="False" EditValue="{Binding Entity.RoleId, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True, ValidatesOnDataErrors=True}" 
+                                          ValueMember="Id" ItemsSource="{Binding LookUpRole.Entities}" 
+                                          AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" ApplyItemTemplateToSelectedItem="True" RenderTransformOrigin="0.5,0.5" Margin="0,0,-0.2,0">
+                                    <dxe:ComboBoxEdit.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform Angle="-0.017"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </dxe:ComboBoxEdit.RenderTransform>
+                                    <dxe:ComboBoxEdit.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <dx:DXImage Source="{Binding Prefix, Converter={StaticResource personPrefixToImageConverter}}" Stretch="None"/>
+                                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center"  Margin="3,0,0,0"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </dxe:ComboBoxEdit.ItemTemplate>
+                                </dxe:ComboBoxEdit>
+                            </dxlc:LayoutItem>
+
+                            <dxlc:LayoutItem  Margin="10,0,0,0"  Label="Teléfono" AddColonToLabel="True" IsRequired="True">
+                                <dxe:ButtonEdit IsTextEditable="True"
+                                            AllowDefaultButton="False"
+                                            MaskType="Simple"
+                                            Mask="0000-0000"
+                                            MaskUseAsDisplayFormat="True"
+                                            EditValue="{Binding Entity.Phone, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" Width="auto">
+                                    <dxe:ButtonInfo GlyphKind="Custom" Command="{Binding Contacts.HomeCallCommand}">
+                                        <dx:DXImage Source="{dx:SvgImageSource Size='16,16', Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Buttons/Glyph_Phone.svg'}" Margin="3,0"/>
+                                    </dxe:ButtonInfo>
+                                </dxe:ButtonEdit>
+                            </dxlc:LayoutItem>
+
+                            <dxlc:LayoutItem  Margin="10,0,0,0" Label="Correo Electronico" AddColonToLabel="True">
+                                <dxe:ButtonEdit IsTextEditable="True"
+                                            AllowDefaultButton="False"
+                                            MaskType="RegEx"
+                                            Mask="(\w|[\.\-])+@(\w|[\-]+\.)*(\w|[\-]){2,63}\.[a-zA-Z]{2,4}"
+                                            EditValue="{Binding Entity.Email, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" 
+                                            ValidateOnTextInput="True" Width="auto" >
+                                    <dxe:ButtonEdit.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform Angle="-0.07"/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </dxe:ButtonEdit.RenderTransform>
+                                    <dxe:ButtonInfo GlyphKind="Custom" Command="{Binding Contacts.MailToCommand}">
+                                        <dx:DXImage Source="{dx:SvgImageSource Size='16,16', Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Buttons/Glyph_Mail.svg'}" Margin="3,0"/>
+                                    </dxe:ButtonInfo>
+                                </dxe:ButtonEdit>
+                            </dxlc:LayoutItem>
+                        </dxlc:LayoutGroup>
+                        <dxlc:LayoutItem HorizontalAlignment="Right" VerticalAlignment="Stretch" Margin="5,0,0,0">
+                            <dxe:ImageEdit Width="150" Height="120" EditValue="{Binding Entity.Image, Converter={StaticResource PictureConverter}, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup View="GroupBox" Header="Información de Piloto Relacionado" Orientation="Vertical" IsCollapsible="True" 
+                                Visibility="{Binding HasPilot ,Mode=TwoWay, Converter={StaticResource ShowPilotInformationConverter}}">
+                <dxlc:LayoutGroup>
+                    <dxlc:LayoutItem Label="Documento de Identificación">
+                        <dxe:TextEdit EditValue="{Binding Pilot.IdentificationDocumentNumber ,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Número de Licencia" >
+                        <dxe:TextEdit EditValue="{Binding Pilot.LicenseNumber,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup>
+                    <dxlc:LayoutItem Label="Tipo de Licencia" >
+                        <dxe:TextEdit EditValue="{Binding Pilot.LiceseType,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Fecha de Vencimiento de Licencia" >
+                        <dxe:DateEdit EditValue="{Binding Pilot.LicenseExpirationDate,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup>
+                    <dxlc:LayoutItem Label="Dirección" >
+                        <dxe:TextEdit EditValue="{Binding Pilot.Address,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                    </dxlc:LayoutItem>
+                    <dxlc:LayoutItem Label="Comentario">
+                        <dxe:TextEdit EditValue="{Binding Pilot.Comment,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup>
+                    <dxlc:LayoutItem Label="Rastrear Piloto" >
+                        <dxe:CheckEdit EditValue="{Binding Pilot.TrackRoute, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                    </dxlc:LayoutItem>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+
+        </dxlc:LayoutControl>
+    </DockPanel>
+</UserControl>

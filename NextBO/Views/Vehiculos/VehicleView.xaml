@@ -1,0 +1,280 @@
+﻿<UserControl x:Class="NextBO.Wpf.Views.VehicleView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon"
+             xmlns:dxlc="http://schemas.devexpress.com/winfx/2008/xaml/layoutcontrol"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:viewmodel="clr-namespace:NextBO.Wpf.ViewModels"
+             xmlns:local="clr-namespace:NextBO.Wpf"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             mc:Ignorable="d"
+             UseLayoutRounding="True"
+             d:DesignHeight="663" d:DesignWidth="1183"
+             DataContext="{dxmvvm:ViewModelSource viewmodel:VehicleViewModel}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/NextBO.Wpf;component/Themes/Common.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:PictureConverter x:Key="PictureConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <dx:DXMessageBoxService/>
+    </dxmvvm:Interaction.Behaviors>
+    <DockPanel Margin="0,0,0,-108">
+        <dxr:RibbonControl x:Name="ribbonControl" RibbonStyle="Office2019" DockPanel.Dock="Top"  ShowApplicationButton="False">
+            <dxmvvm:Interaction.Behaviors>
+            </dxmvvm:Interaction.Behaviors>
+            <dxr:RibbonDefaultPageCategory Caption="defaultCategory">
+                <dxr:RibbonPage Caption="Home">     
+                    <dxr:RibbonPageGroup Caption="Acciones">
+                        <dxb:BarButtonItem Content="Guardar" Command="{Binding SaveCommand}" x:Name="butonPrincipal" 
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}" />
+                        <dxb:BarButtonItem Content="Guardar y Cerrar" Command="{Binding SaveAndCloseCommand }"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/SaveAndClose.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/SaveAndClose.svg'}" />
+                        <dxb:BarButtonItem Content="Activar" Command="{Binding ActivateCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Active.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Active.svg'}" />
+                        <dxb:BarButtonItem Content="Desactivar" Command="{Binding DeleteCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Delete.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Delete.svg'}" />
+                    </dxr:RibbonPageGroup>
+                    <dxr:RibbonPageGroup>
+                        <dxb:BarButtonItem Content="Restablecer Cambios" Command="{Binding ResetCommand}"
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/ResetChanges.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/ResetChanges.svg'}" />
+                    </dxr:RibbonPageGroup>
+                    <dxr:RibbonPageGroup>
+                        <dxb:BarButtonItem Content="Reestructurar" Command="{Binding changeValueIsCustomizationCommand}" 
+                                Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/AssignTask.svg'}"
+                                LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/AssignTask.svg'}" >
+
+                        </dxb:BarButtonItem>
+                        <dxb:BarButtonItem Content="Guardar Layout"
+                                           Command="{Binding SaveLayoutCommand, ElementName=SerializeHelper}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Save.svg'}" />
+                        <dxb:BarButtonItem Content="Restaurar"
+                                           Command="{Binding RestoreLayoutCommand, ElementName=SerializeHelper}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Undo.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Undo.svg'}" />
+                    </dxr:RibbonPageGroup>
+                </dxr:RibbonPage>
+            </dxr:RibbonDefaultPageCategory>
+        </dxr:RibbonControl>
+        <dxr:RibbonStatusBarControl DockPanel.Dock="Bottom"/>
+        <dxlc:DataLayoutControl x:Name="layoutItemss"
+                            Orientation="Vertical"
+                            Background="Transparent"
+                            IsCustomization="{Binding IsCustomization}"
+                            CurrentItem="{Binding Entity}" 
+                            AutoGenerateItems="False">
+            <dxmvvm:Interaction.Behaviors>
+                <local:LayoutControlSaveBehavior x:Name="SerializeHelper" FileName="layoutItemss">
+                </local:LayoutControlSaveBehavior>
+            </dxmvvm:Interaction.Behaviors>
+            <dxlc:LayoutGroup View="GroupBox" Header="Informacion Basica" IsCollapsible="True">
+                <dxlc:LayoutGroup Orientation="Vertical">
+                    <dxlc:LayoutGroup>
+                        <dxlc:DataLayoutItem Label="Marca" Binding="{Binding Brand ,UpdateSourceTrigger=PropertyChanged ,ValidatesOnDataErrors=True}"/>
+                        <dxlc:DataLayoutItem Label="Línea" Margin="20,0,0,0" VerticalAlignment="Center" Binding="{Binding Line, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup>
+                        <dxlc:DataLayoutItem Label="Modelo" Binding="{Binding Model, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}" />
+                        <dxlc:DataLayoutItem Label="Cilindraje" Binding="{Binding CC, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"  Margin="20,0,0,0" VerticalAlignment="Center"/>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup>
+                        <dxlc:DataLayoutItem Label="Kilometraje" Binding="{Binding Odometer, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                        <dxlc:DataLayoutItem Label="Color" Margin="20,0,0,0" VerticalAlignment="Center" Binding="{Binding Color, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup>
+                        <dxlc:DataLayoutItem Label="Número de chasís" Binding="{Binding ChassisNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                        <dxlc:DataLayoutItem Label="Número de motor" Margin="20,0,0,0" VerticalAlignment="Center" Binding="{Binding EngineNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup>
+                        <dxlc:DataLayoutItem Label="VIN" Binding="{Binding VinNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                        <dxlc:DataLayoutItem Label="Número de placa" Margin="20,0,0,0" VerticalAlignment="Center" Binding="{Binding PlateNumber, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup>
+                        <dxlc:DataLayoutItem Label="Código empresa de transporte" Binding="{Binding TransportCompanyCode, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                        <dxlc:LayoutItem Label="Piloto" Margin="20,0,0,0" VerticalAlignment="Center" >
+                            <dxe:ComboBoxEdit IsTextEditable="False" EditValue="{Binding Entity.PilotId, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True, ValidatesOnDataErrors=True}"
+                                         ValueMember="Id" ItemsSource="{Binding LookUpPilot.Entities}"
+                                         AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" ApplyItemTemplateToSelectedItem="True" RenderTransformOrigin="0.5,0.5">
+                                <dxe:ComboBoxEdit.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform Angle="-0.017"/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </dxe:ComboBoxEdit.RenderTransform>
+                                <dxe:ComboBoxEdit.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <dx:DXImage Source="{Binding Prefix, Converter={StaticResource personPrefixToImageConverter}}" Stretch="None"/>
+                                            <TextBlock Text="{Binding User.Name}" VerticalAlignment="Center" Margin="3,0,0,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </dxe:ComboBoxEdit.ItemTemplate>
+                            </dxe:ComboBoxEdit>
+                        </dxlc:LayoutItem>
+                    </dxlc:LayoutGroup>
+                    <dxlc:LayoutGroup>
+                        <dxlc:DataLayoutItem Label="Estado" Binding="{Binding Status, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                        <dxlc:DataLayoutItem Label="Costo Diario" Margin="20,0,0,0" Binding="{Binding DailyCost, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                    </dxlc:LayoutGroup>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup Height="210">
+                    <dxlc:DataLayoutItem Height="210">
+                        <dxe:ImageEdit EditValue="{Binding Image, Converter={StaticResource PictureConverter}, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"
+                                       Stretch="Uniform"/>
+                    </dxlc:DataLayoutItem>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup View="GroupBox" Header="Eficiencia" Orientation="Vertical" IsCollapsible="True" >
+                <dxlc:LayoutGroup>
+                    <dxlc:DataLayoutItem Label="Confiabilidad (0 - 5)" >
+                        <dxe:SpinEdit MinValue="0" MaxValue="5" ShowErrorToolTip="True" EditValue="{Binding View.DataContext.Entity.Confiabilidad, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}">
+                            <dxe:SpinEdit.ErrorToolTipContentTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Ingrese un valor entre el rango de 0 a 5"/>
+                                </DataTemplate>
+                            </dxe:SpinEdit.ErrorToolTipContentTemplate>
+                        </dxe:SpinEdit>
+                    </dxlc:DataLayoutItem>
+                    <dxlc:DataLayoutItem Label="Tasa de llenado del vehículo">
+                        <dxe:SpinEdit MinValue="0" MaxValue="100" ShowErrorToolTip="True" EditValue="{Binding FillRate, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}">
+                            <dxe:SpinEdit.ErrorToolTipContentTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="Ingrese un valor entre el rango de 0 a 100"/>
+                                </DataTemplate>
+                            </dxe:SpinEdit.ErrorToolTipContentTemplate>
+                        </dxe:SpinEdit>
+                    </dxlc:DataLayoutItem>
+                </dxlc:LayoutGroup>
+                <!--Se oculta el grupo temporalmente debido a cambios por implementacion ALZA-->
+                <dxlc:LayoutGroup Visibility="Collapsed">
+                    <dxlc:DataLayoutItem Visibility="Collapsed" Label="Costo esperado por kilometro" Binding="{Binding AverageCostPerKilometerEsperado, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                    <dxlc:DataLayoutItem Visibility="Collapsed" Label="Costo promedio por kilometro" Binding="{Binding AverageCostPerKilometer, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup View="GroupBox" Header="Información de Carga (Furgon)" Orientation="Vertical" IsCollapsible="True">
+                <dxlc:LayoutGroup>
+                    <dxlc:LayoutItem Label="Tipo de carga"
+                                         Margin="0,0,0,0"
+                                         AddColonToLabel="True">
+                        <dxe:ComboBoxEdit PopupFooterButtons="OkCancel"
+                                              ShowSizeGrip="True"
+                                              EditValue="{Binding Entity.LoadType, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"
+                                              IsTextEditable="False">
+                            <dxe:ComboBoxEdit.StyleSettings>
+                                <dxe:RadioComboBoxStyleSettings />
+                            </dxe:ComboBoxEdit.StyleSettings>
+                            <dxe:ComboBoxEditItem Content="Pesada" />
+                            <dxe:ComboBoxEditItem Content="Mediana"  />
+                            <dxe:ComboBoxEditItem Content="Liviana" />
+                        </dxe:ComboBoxEdit>
+                    </dxlc:LayoutItem>
+                    <!--<dxlc:DataLayoutItem Label="Tipo de Carga" Binding="{Binding LoadType, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}">-->
+                        <!--<dxg:LookUpEdit DisplayMember="Value"
+                                        ValueMember="Id"
+                                        AutoPopulateColumns="False"
+                                        AutoComplete="True"
+                                        ItemsSource="{Binding LookUpVehicleClassification.entities}"
+                                        EditValue="{Binding Path=LoadType, Mode=TwoWay}"
+                                        ValidateOnTextInput="True"
+                                        IncrementalFiltering="True"
+                                        ImmediatePopup="True"
+                                        IsPopupAutoWidth="False"
+                                        VerticalAlignment="Top"
+                                        AssignNullValueOnClearingEditText="True">
+                            <dxg:LookUpEdit.PopupContentTemplate>
+                                <ControlTemplate>
+                                    <dxg:GridControl x:Name="PART_GridControl">
+                                        <dxg:GridControl.Columns>
+                                            <dxg:GridColumn FieldName="Id" Header="Codigó"/>
+                                            <dxg:GridColumn FieldName="Value" Header="Descripción"/>
+                                        </dxg:GridControl.Columns>
+                                        <dxg:GridControl.View>
+                                            <dxg:TableView AutoWidth="True"/>
+                                        </dxg:GridControl.View>
+                                    </dxg:GridControl>
+                                </ControlTemplate>
+                            </dxg:LookUpEdit.PopupContentTemplate>
+                        </dxg:LookUpEdit>-->
+                    <!--</dxlc:DataLayoutItem>-->
+                    <dxlc:DataLayoutItem Label="Peso" Binding="{Binding Weight, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup>
+                    <dxlc:DataLayoutItem Label="Altura" Binding="{Binding High, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                    <dxlc:DataLayoutItem Label="Anchura" Binding="{Binding Width, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup>
+                    <dxlc:DataLayoutItem Label="Profundidad" Binding="{Binding Depth, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                    <dxlc:DataLayoutItem Label="Factor de volumen" Binding="{Binding VolumeFactor, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+
+            <dxlc:LayoutGroup View="GroupBox"   Header="Adicional" Orientation="Vertical" IsCollapsible="True">
+                <dxlc:LayoutGroup>
+                    <dxlc:DataLayoutItem Label="Número de seguro" Binding="{Binding InsuranceDocId, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                    <dxlc:DataLayoutItem Label="Ejes de vehículos" Binding="{Binding VehicleAxles, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"/>
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup>
+                    <dxlc:LayoutItem Label="Clasificación"
+                                         Margin="0,0,0,0"
+                                         AddColonToLabel="True">
+                        <dxe:ComboBoxEdit PopupFooterButtons="OkCancel"
+                                              ShowSizeGrip="True"
+                                              EditValue="{Binding Entity.Rating, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}"
+                                              IsTextEditable="False">
+                            <dxe:ComboBoxEdit.StyleSettings>
+                                <dxe:RadioComboBoxStyleSettings />
+                            </dxe:ComboBoxEdit.StyleSettings>
+                            <dxe:ComboBoxEditItem Content="Cabezal" />
+                            <dxe:ComboBoxEditItem Content="Camion"  />
+                            <dxe:ComboBoxEditItem Content="Panel" />
+                            <dxe:ComboBoxEditItem Content="Pickup" />
+                            <dxe:ComboBoxEditItem Content="Picanto" />
+                        </dxe:ComboBoxEdit>
+                    </dxlc:LayoutItem>
+                    <!--<dxlc:DataLayoutItem Label="Clasificacion" Binding="{Binding Rating, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True, NotifyOnSourceUpdated=True}">-->
+                        <!--<dxe:ComboBoxEdit IsTextEditable="False" EditValue="{Binding Entity.Rating, UpdateSourceTrigger=PropertyChanged, NotifyOnSourceUpdated=True, ValidatesOnDataErrors=True}"
+                                         ValueMember="Id" ItemsSource="{Binding LookUpVehicleClassification.Entities}"
+                                         AllowUpdateTwoWayBoundPropertiesOnSynchronization="False" ApplyItemTemplateToSelectedItem="True" RenderTransformOrigin="0.5,0.5">
+                            <dxe:ComboBoxEdit.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="-0.017"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </dxe:ComboBoxEdit.RenderTransform>
+                            <dxe:ComboBoxEdit.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <dx:DXImage Source="{Binding Prefix, Converter={StaticResource personPrefixToImageConverter}}" Stretch="None"/>
+                                        <TextBlock Text="{Binding ParametersResult.Value}" VerticalAlignment="Center" Margin="3,0,0,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </dxe:ComboBoxEdit.ItemTemplate>
+                        </dxe:ComboBoxEdit>-->
+                    <!--</dxlc:DataLayoutItem>-->
+                </dxlc:LayoutGroup>
+                <dxlc:LayoutGroup>
+                </dxlc:LayoutGroup>
+            </dxlc:LayoutGroup>
+        </dxlc:DataLayoutControl>
+    </DockPanel>
+</UserControl>

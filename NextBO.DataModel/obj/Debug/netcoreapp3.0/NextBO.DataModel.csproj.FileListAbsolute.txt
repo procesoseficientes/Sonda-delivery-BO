@@ -1,0 +1,14 @@
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\bin\Debug\netcoreapp3.0\NextBO.DataModel.deps.json
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\bin\Debug\netcoreapp3.0\NextBO.DataModel.dll
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\bin\Debug\netcoreapp3.0\NextBO.DataModel.pdb
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\bin\Debug\netcoreapp3.0\NextApi.DataAccessLayer.dll
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\bin\Debug\netcoreapp3.0\NextApi.Models.dll
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\bin\Debug\netcoreapp3.0\NextApi.DataAccessLayer.pdb
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\bin\Debug\netcoreapp3.0\NextApi.Models.pdb
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\obj\Debug\netcoreapp3.0\NextBO.DataModel.csprojAssemblyReference.cache
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\obj\Debug\netcoreapp3.0\NextBO.DataModel.AssemblyInfoInputs.cache
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\obj\Debug\netcoreapp3.0\NextBO.DataModel.AssemblyInfo.cs
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\obj\Debug\netcoreapp3.0\NextBO.DataModel.csproj.CoreCompileInputs.cache
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\obj\Debug\netcoreapp3.0\NextBO.DataModel.csproj.CopyComplete
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\obj\Debug\netcoreapp3.0\NextBO.DataModel.dll
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO.DataModel\obj\Debug\netcoreapp3.0\NextBO.DataModel.pdb

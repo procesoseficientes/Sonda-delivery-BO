@@ -1,0 +1,20 @@
+﻿NextBO.Wpf
+
+
+winexe
+C#
+.cs
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO\obj.NetCore.Desktop\
+NextBO.Wpf
+none
+false
+DEBUG;TRACE;DXCORE3;DEBUG;NETCOREAPP;NETCOREAPP3_0;
+C:\Users\Eira Delcompare\mobilityscm\NetCoreWPF\NextBO\NextBO\App.xaml
+33-1992741152
+1-301770927
+124888565223
+3881059165200
+DXSplashScreen\SplashScreenWindow.xaml;Filtering\View\CustomFilterView.xaml;MainWindow.xaml;Themes\Common.xaml;Themes\Shared.xaml;Views\BaseView.xaml;Views\DashboardView.xaml;Views\DeliveryHistory\DeliveryHistoryCollectionView.xaml;Views\Entregas\DeliveryCollectionView.xaml;Views\Entregas\DeliveryTaskView.xaml;Views\Entregas\NoDeliveryReasonCollectionView.xaml;Views\Entregas\ReDeliveryView.xaml;Views\Entregas\RefundActionCollectionView.xaml;Views\Entregas\RouteTrackingCollectionView.xaml;Views\LoginView.xaml;Views\OrdenesDeTrabajo\CenterOfServiceCollectionView.xaml;Views\OrdenesDeTrabajo\CenterOfServiceView.xaml;Views\OrdenesDeTrabajo\DetailView.xaml;Views\OrdenesDeTrabajo\ServiceCollectionView.xaml;Views\OrdenesDeTrabajo\ServiceView.xaml;Views\OrdenesDeTrabajo\WorkOrderCollectionView.xaml;Views\Seguridad\CheckpointByRoleView.xaml;Views\Seguridad\ParameterView.xaml;Views\Seguridad\ReporterView.xaml;Views\Seguridad\RoleCollectionView.xaml;Views\Seguridad\UserCollectionView.xaml;Views\Seguridad\UserView.xaml;Views\Simulacion\RouteSimulatorCollectionView.xaml;Views\Simulacion\RouteSimulatorHeaderView.xaml;Views\Vehiculos\CheckListVehicleCollectionView.xaml;Views\Vehiculos\CheckListVehicleView.xaml;Views\Vehiculos\VehicleCollectionView.xaml;Views\Vehiculos\VehicleView.xaml;
+
+False
+

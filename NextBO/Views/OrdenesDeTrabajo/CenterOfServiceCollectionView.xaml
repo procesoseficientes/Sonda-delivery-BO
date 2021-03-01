@@ -1,0 +1,181 @@
+﻿<UserControl x:Class="NextBO.Wpf.Views.CenterOfServiceCollectionView"
+             xmlns="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dxb="http://schemas.devexpress.com/winfx/2008/xaml/bars"
+             xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+             xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+             xmlns:dxr="http://schemas.devexpress.com/winfx/2008/xaml/ribbon"
+             xmlns:dxdo="http://schemas.devexpress.com/winfx/2008/xaml/docking"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+             xmlns:local="clr-namespace:NextBO.Wpf"
+             xmlns:services="clr-namespace:NextBO.Wpf.Services"
+             mc:Ignorable="d"
+             UseLayoutRounding="True"
+             d:DesignHeight="663" d:DesignWidth="1183" >
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/NextBO.Wpf;component/Themes/Common.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <local:PictureConverter x:Key="PictureConverter" />
+            <local:IntToBooleanConverter x:Key="IntToBooleanConverter" />
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <dxmvvm:Interaction.Behaviors>
+        <services:ExportGridService  View="{x:Reference ServiceCenterTableView}" />
+        <dx:DXMessageBoxService />
+        <dxmvvm:SaveFileDialogService />
+    </dxmvvm:Interaction.Behaviors>
+    
+    <DockPanel>
+        <dxr:RibbonControl x:Name="ribbonControl" RibbonStyle="Office2019" DockPanel.Dock="Top" ShowApplicationButton="False">
+
+            <dxr:RibbonDefaultPageCategory Caption="defaultCategory">
+                <dxr:RibbonPage Caption="Home">
+                    <dxr:RibbonPageGroup Caption="Acciones">
+                        <dxb:BarButtonItem Content="Agregar"
+                                           Command="{Binding NewCommand}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Add.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Add.svg'}" />
+                        <dxb:BarButtonItem Content="Editar"
+                                           Command="{Binding EditCommand}"
+                                           CommandParameter="{Binding SelectedEntity}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Edit.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Edit.svg'}" />
+                        <dxb:BarButtonItem Content="Inactivar"
+                                           Command="{Binding DeactiveCommand}"
+                                           CommandParameter="{Binding SelectedEntity}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Delete.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Delete.svg'}" />
+                        <dxb:BarButtonItem Content="Activar"
+                                           Command="{Binding ActivateCommand}"
+                                           CommandParameter="{Binding SelectedEntity}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Active.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Active.svg'}" />
+                    </dxr:RibbonPageGroup>
+                    <dxr:RibbonPageGroup Caption="Exportar">
+                        <dxb:BarButtonItem Content="Previsualizar"
+                                           Command="{Binding ShowPreviewCommand}"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/PrintPreview.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/PrintPreview.svg'}" />
+                        <dxb:BarButtonItem Content="Exportar"
+                                           Command="{Binding ExportGridCommand}"
+                                           CommandParameter="XLSX"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Controls/ExportToXLS.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Controls/ExportToXLS.svg'}" />
+                        <dxb:BarButtonItem Content="Exportar"
+                                           Command="{Binding ExportGridCommand}"
+                                           CommandParameter="PDF"
+                                           LargeGlyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Controls/ExportToPDF.svg'}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Controls/ExportToXLS.svg'}" />
+                    </dxr:RibbonPageGroup>
+                </dxr:RibbonPage>
+            </dxr:RibbonDefaultPageCategory>
+        </dxr:RibbonControl>
+
+        <dxdo:LayoutGroup Orientation="{Binding ViewSettings.Orientation}" 
+                          VerticalAlignment="Stretch"
+                          VerticalContentAlignment="Stretch" 
+                          Margin="10,10,10,0" >
+            <dxdo:LayoutPanel AllowSizing="True"
+                              VerticalScrollBarVisibility="Disabled"
+                              HorizontalScrollBarVisibility="Disabled"
+                              AllowClose="False"
+                              AllowDrag="False"
+                              AllowFloat="False"
+                              AllowHide="False"
+                              ShowCaption="False"
+                              ItemWidth="*"
+                              ItemHeight="*">
+                <Grid>
+                    <dxg:GridControl x:Name="tableViewGridControl"
+                                     ItemsSource="{Binding Entities}"
+                                     SelectedItem="{Binding SelectedEntity}"
+                                     ShowBorder="False"
+                                     AutoExpandAllGroups="True"
+                                     ClipboardCopyMode="ExcludeHeader"
+                                     EnableSmartColumnsGeneration="True" >
+                        <dxmvvm:Interaction.Behaviors>
+                            <dxmvvm:EventToCommand PassEventArgsToCommand="True"
+                                                           Command="{Binding EditCommand}"
+                                                           EventName="MouseDoubleClick">
+                                <dxmvvm:EventToCommand.EventArgsConverter>
+                                    <dx:EventArgsToDataRowConverter />
+                                </dxmvvm:EventToCommand.EventArgsConverter>
+                            </dxmvvm:EventToCommand>
+                            <local:GridSaveLayoutBehavior x:Name="SerializeHelper"
+                                                          FileName="ServiceCenterTableView.xml" />
+                        </dxmvvm:Interaction.Behaviors>
+                        <dxg:GridControl.View>
+                            <dxg:TableView Name="ServiceCenterTableView"
+                               AllowPerPixelScrolling="True"
+                               AllowEditing="True"
+                               ShowSearchPanelMode="Always"
+                               AutoWidth="True"
+                               SearchPanelHorizontalAlignment="Right"
+                               SearchPanelNullText="Buscar Centro De Servicio (Ctrl + F)"
+                               ShowAutoFilterRow="True"
+                               ShowCriteriaInAutoFilterRow="True"
+                               ColumnFilterPopupMode="Excel">
+                                <dxg:TableView.RowCellMenuCustomizations>
+                                    <dxb:BarButtonItem Content="Editar"
+                                           Command="{Binding View.DataContext.EditCommand}"
+                                           CommandParameter="{Binding Row.Row}"
+                                           Glyph="{dx:SvgImageSource Uri='pack://application:,,,/NextBO.Wpf;component/Resources/Edit.svg'}"/>
+                                </dxg:TableView.RowCellMenuCustomizations>
+                            </dxg:TableView>
+                        </dxg:GridControl.View>
+                        <dxg:GridControl.Columns>
+                            <dxg:GridColumn IsSmart="True"
+                                Width="15"
+                                FieldName="Id"
+                                Header="#"
+                                ReadOnly="True"/>
+                            <dxg:GridColumn IsSmart="True"
+                                FieldName="Name"
+                                Header="Nombre"
+                                ReadOnly="True"/>
+                            <dxg:GridColumn IsSmart="True"
+                                FieldName="Contact"
+                                Header="Contacto"
+                                Visible="True"
+                                ReadOnly="True" />
+                            <dxg:GridColumn IsSmart="True"
+                                FieldName="PhoneNumber"
+                                Header="Numero Teléfonico"
+                                Visible="True"
+                                ReadOnly="True" />
+                            <dxg:GridColumn FieldName="Website"
+                                Header="Pagina web">
+                                <dxg:GridColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock>  
+                        <Hyperlink NavigateUri="{Binding Data.Website}" TargetName="_blank" RequestNavigate="Hyperlink_RequestNavigate_1">  
+                            <TextBlock Text="{Binding Data.Website}" />  
+                        </Hyperlink>  
+                    </TextBlock>
+                                    </DataTemplate>
+                                </dxg:GridColumn.CellTemplate>
+                            </dxg:GridColumn>
+                            <dxg:GridColumn Header="¿Es Activo?"
+                                            Width="60"
+                                            IsEnabled="False"
+                                            Binding="{Binding Path=IsActive, Converter={StaticResource IntToBooleanConverter}}">
+                                <dxg:GridColumn.EditSettings>
+                                    <dxe:CheckEditSettings />
+                                </dxg:GridColumn.EditSettings>
+                            </dxg:GridColumn>
+                        </dxg:GridControl.Columns>
+                        <dxg:GridControl.GroupSummary>
+                            <dxg:GridSummaryItem SummaryType="Count" />
+                        </dxg:GridControl.GroupSummary>
+                    </dxg:GridControl>
+                </Grid>
+            </dxdo:LayoutPanel>
+        </dxdo:LayoutGroup>
+    </DockPanel>
+</UserControl>
